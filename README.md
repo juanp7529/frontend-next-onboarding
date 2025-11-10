@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 Sistema de Autenticación - Next.js + Material-UI
 
-## Getting Started
+Sistema de login profesional con arquitectura escalable y limpia.
 
-First, run the development server:
+## 📁 Estructura del Proyecto
+
+```
+├── app/
+│   ├── page.tsx                  # ✅ Login (Página principal)
+│   └── layout.tsx                # Layout global
+├── components/
+│   └── auth/
+│       └── LoginForm.tsx         # Componente del formulario
+├── hooks/
+│   └── useAuth.ts                # Hook de autenticación
+├── services/
+│   └── auth.service.ts           # ⚠️ CONFIGURA AQUÍ TU API
+├── lib/
+│   └── api.ts                    # Cliente HTTP base
+└── types/
+    └── auth.types.ts             # Tipos TypeScript
+```
+
+## 🚀 Inicio Rápido
+
+### 1. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 2. Configurar variables de entorno
+
+Crea un archivo `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=https://tu-api.com
+```
+
+### 3. Configurar tu endpoint
+
+Edita `services/auth.service.ts` línea 17:
+
+```typescript
+const response = await apiClient.post<ILoginResponse>(
+  '/api/auth/login', // 👈 CAMBIA ESTO por tu endpoint
+  credentials
+);
+```
+
+### 4. Ejecutar el proyecto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📋 API Response Format
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tu API debe responder con este formato:
 
-## Learn More
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": "3600"
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+Si tu API usa un formato diferente, actualiza `types/auth.types.ts`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```typescript
+export interface ILoginResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: string;
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✨ Características
 
-## Deploy on Vercel
+✅ **Arquitectura Limpia**
+- Separación de responsabilidades
+- Service Layer Pattern
+- Custom Hooks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+✅ **Material-UI**
+- Componentes modernos y responsive
+- Validación en tiempo real
+- Estados de carga y error
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+✅ **TypeScript**
+- Type-safe en todas las capas
+- Interfaces bien definidas
+
+✅ **Seguridad**
+- Manejo automático de tokens
+- Timeout en peticiones
+- Error handling robusto
+
+## 🔧 Configuración Adicional
+
+### Cambiar ruta de redirección post-login
+
+Edita `hooks/useAuth.ts` línea 27:
+
+```typescript
+router.push('/dashboard'); // 👈 CAMBIA ESTO
+```
+
+### Personalizar validaciones
+
+Edita `components/auth/LoginForm.tsx` en la función `validateForm()`.
+
+## 📦 Tecnologías
+
+- **Next.js 16** - Framework React
+- **Material-UI 7** - Componentes UI
+- **TypeScript** - Type safety
+- **React 19** - Library
+
+## 🧪 Testing con Mock
+
+Para probar sin API, puedes usar un mock temporal en `auth.service.ts`:
+
+```typescript
+// Comentar la llamada real y descomentar esto:
+return new Promise((resolve) => {
+  setTimeout(() => {
+    resolve({
+      access_token: 'mock-token-123',
+      token_type: 'Bearer',
+      expires_in: '3600'
+    });
+  }, 1000);
+});
+```
+
+## 📝 Próximos Pasos
+
+1. ✅ Configurar tu endpoint de API
+2. ✅ Ajustar la respuesta según tu backend
+3. ⬜ Crear página de dashboard
+4. ⬜ Implementar refresh token
+5. ⬜ Agregar recuperación de contraseña
+
+---
+
+💡 **Nota**: El login está en la ruta principal `/` del proyecto.
